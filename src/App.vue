@@ -1,25 +1,72 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import Header from './components/Header.vue'
+import GenericContent from './components/GenericContent.vue'
+import Menu from 'primevue/menu';
+
+import { ref } from "vue";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+const items = ref([
+    {
+        label: 'Vilka är vi',
+        icon: 'pi pi-palette',
+        route: '/theming/unstyled'
+    },
+    {
+        label: 'Gå till shoppen',
+        icon: 'pi pi-link',
+        command: () => {
+            router.push('/introduction');
+        }
+    },
+    {
+        label: 'Ta mig härifrån',
+        icon: 'pi pi-home',
+        url: 'https://vuejs.org/'
+    }
+]);
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.jpg" width="225" height="125" />
+    <img alt="Vue logo" class="logo" src="./assets/logo.jpg" width="225" height="100" />
 
     <div class="wrapper">
-      <HelloWorld msg="Heddas ozempicesque hemsida" />
+      <Header msg="Heddas ozempicesque hemsida" />
     </div>
   </header>
 
   <main>
-    <TheWelcome />
+    <Menu :model="items">
+      <template #item="{ item, props }">
+        <a v-ripple :href="item.url" :target="item.target" v-bind="props.action" style="padding-top: 5px; padding-bottom: 5px;">
+            <span :class="item.icon" />
+            <span>{{ item.label }}</span>
+        </a>
+      </template>
+    </Menu>
+    <GenericContent class="content"/>
   </main>
 </template>
 
 <style scoped>
 header {
   line-height: 1.5;
+  position: fixed;
+}
+
+main {
+  margin-top: 120px;
+  display: flex;
+}
+
+Menu {
+    margin-top: 10px;
+}
+
+.content {
+  margin-left: 40px;
 }
 
 .logo {

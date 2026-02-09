@@ -15,6 +15,7 @@
 <style scoped>
 .item {
   margin-top: 2rem;
+  min-width: 600px;
   display: flex;
   position: relative;
 }

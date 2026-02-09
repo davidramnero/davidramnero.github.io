@@ -11,9 +11,7 @@ defineProps({
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      Här kan vi skriva saker och utveckla med 
-      <a href="https://vite.dev/" target="_blank" rel="noopener">Vite</a> +
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">Vue 3</a>.
+      Det här kan bli en hel värld, om du bara låter det hända
     </h3>
   </div>
 </template>
