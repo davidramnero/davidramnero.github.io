@@ -5,13 +5,21 @@ import Menu from 'primevue/menu';
 
 import { ref } from "vue";
 import { useRouter } from 'vue-router';
+import { onMounted, onBeforeUnmount } from 'vue'
 
+const menu = ref();
+const toggle = (event) => {
+  console.log('click')
+    menu.value.toggle(event);
+};
 const router = useRouter();
 const items = ref([
     {
         label: 'Vilka är vi',
         icon: 'pi pi-palette',
-        route: '/theming/unstyled'
+        command: () => {
+            toggle();
+        }
     },
     {
         label: 'Gå till shoppen',
@@ -26,34 +34,50 @@ const items = ref([
         url: 'https://vuejs.org/'
     }
 ]);
+
+function close(e) {
+  console.log('menu.value', menu.value)
+}
+
+onMounted(() => {
+  document.addEventListener('click', close)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', close)
+})
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.jpg" width="225" height="100" />
-
-    <div class="wrapper">
+    <span class="wrapper">
+      <img alt="Vue logo" class="logo" src="./assets/logo.jpg"/>
       <Header msg="Heddas ozempicesque hemsida" />
-    </div>
+    </span>
   </header>
 
   <main>
-    <Menu :model="items">
-      <template #item="{ item, props }">
-        <a v-ripple :href="item.url" :target="item.target" v-bind="props.action" style="padding-top: 5px; padding-bottom: 5px;">
-            <span :class="item.icon" />
-            <span>{{ item.label }}</span>
-        </a>
-      </template>
-    </Menu>
+        <div class="card flex justify-center">
+        <Button type="button" icon="pi pi-ellipsis-v" @click="toggle" aria-haspopup="true" aria-controls="overlay_menu" />
+        <Menu ref="menu" id="overlay_menu" :model="items" :popup="true">
+          <template #item="{ item, props }">
+            <a v-ripple :href="item.url" :target="item.target" v-bind="props.action" class="sidebarItem">
+                <span :class="item.icon" />
+                <span>{{ item.label }}</span>
+            </a>
+          </template>
+        </Menu>
+    </div>
     <GenericContent class="content"/>
   </main>
 </template>
 
 <style scoped>
 header {
+  display: inline-block;
   line-height: 1.5;
   position: fixed;
+  width: 100%;
 }
 
 main {
@@ -61,12 +85,13 @@ main {
   display: flex;
 }
 
-Menu {
+.sidebar {
     margin-top: 10px;
 }
 
-.content {
-  margin-left: 40px;
+.sidebarItem {
+    padding-top: 10px;
+    background-color: black;
 }
 
 .logo {
@@ -74,21 +99,50 @@ Menu {
   margin: 0 auto 2rem;
 }
 
-@media (min-width: 1024px) {
-  header {
+@media (min-width: 320px) {
+  .logo {
+    display: inline-block;
+    margin: 0 0.5rem 0 0;
+    width: 120px;
+    height: 50px;
+  }
+
+  .wrapper {
     display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
+    padding-top: 0px;
+    max-height: 125px;
+  }
+  .sidebar {
+    max-width: 150px !important;
+    min-width: 50px;
+    width: 100%;
+  }
+  .sidebarItem {
+    width: 120px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  .content {
+    margin-left: 10px;
+  }
+}
+
+@media (min-width: 1024px) {
+
+  .content {
+    margin-left: 40px;
   }
 
   .logo {
+    display: inline-block;
     margin: 0 2rem 0 0;
+    width: 225px;
+    height: 100px; 
   }
 
-  header .wrapper {
+  .wrapper {
     display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
   }
 }
 </style>
